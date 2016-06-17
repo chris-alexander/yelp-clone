@@ -1,12 +1,15 @@
 const NODE_ENV = process.env.NODE_ENV;
-const isDev = NODE_ENV === 'development';
+const dotenv = require('dotenv');
 
 const webpack = require('webpack');
 const fs = require('fs');
 const path = require('path'),
       join = path.join,
       resolve = path.resolve;
+
 const getConfig = require('hjs-webpack');
+
+const isDev = NODE_ENV === 'development';
 
 /* paths */
 const root = resolve(__dirname);
@@ -23,6 +26,27 @@ var config = getConfig({
   hostname: "0.0.0.0"
 });
 
+/**
+ * environment variables
+ */
+const dotEnvVars = dotenv.config();
+const environmentEnv = dotenv.config({
+  path: join(root, 'config', `${NODE_ENV}.config.js`),
+  silent: true
+});
+const envVaribles = Object.assign({}, dotEnvVars, environmentEnv);
+const defines = Object.keys(envVaribles)
+  .reduce((memo, key) => {
+    const val = JSON.stringify(envVaribles[key]);
+    memo[`__${key.toUpperCase()}__`] = val;
+    return memo;
+  }, {
+    __NODE_ENV__: JSON.stringify(NODE_ENV)
+  });
+
+config.plugins = [
+  new webpack.DefinePlugin(defines)
+].concat(config.plugins);
 
 /**
  * CSS modules
