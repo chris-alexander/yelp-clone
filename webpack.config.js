@@ -10,6 +10,7 @@ const path = require('path'),
 const getConfig = require('hjs-webpack');
 
 const isDev = NODE_ENV === 'development';
+const isTest = NODE_ENV === 'test';
 
 /* paths */
 const root = resolve(__dirname);
@@ -89,5 +90,27 @@ config.resolve.alias = {
   'components': join(src, 'components'),
   'utils': join(src, 'utils')
 };
+
+/**
+ * tests
+ */
+if (isTest) {
+  config.externals = {
+    'react/lib/ReactContext': true,
+    'react/lib/ExecutionEnvironment': true,
+    'react/addons': true
+  };
+
+  config.plugins = config.plugins.filter(p => {
+    const name = p.constructor.toString();
+    const fnName = name.match(/^function (.*)\((.*\))/);
+
+    const idx = [
+      'DedupePlugin',
+      'UglifyJsPlugin'
+    ].indexOf(fnName[1]);
+    return idx < 0;
+  });
+}
 
 module.exports = config;
