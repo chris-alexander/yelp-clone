@@ -47,9 +47,9 @@ export class Container extends React.Component {
             places={this.state.places}
             />
           <div className={styles.content}>
-            {this.state.places.map(place => {
+            {/*{this.state.places.map(place => {
               return (<div key={place.id}>{place.name}</div>);
-            })}
+            })}*/}
           </div>
         </Map>
       </div>
