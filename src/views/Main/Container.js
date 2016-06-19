@@ -33,7 +33,23 @@ export class Container extends React.Component {
 
       });
   }
+  onMarkerClick(item) {
+    const {place} = item;
+    const {push} = this.context.router;
+    push(`/map/detail/${place.place_id}`);
+  }
   render() {
+    let children = null;
+    if (this.props.children) {
+      children = React.cloneElement(
+        this.props.children,
+        {
+          google: this.props.google,
+          places: this.state.places,
+          loaded: this.props.loaded,
+          onMarkerClick: this.onMarkerClick.bind(this)
+        });
+    }
     return (
       <div>
         <Map
@@ -47,14 +63,16 @@ export class Container extends React.Component {
             places={this.state.places}
             />
           <div className={styles.content}>
-            {/*{this.state.places.map(place => {
-              return (<div key={place.id}>{place.name}</div>);
-            })}*/}
+            {children}
           </div>
         </Map>
       </div>
     );
   }
+};
+
+Container.contextTypes = {
+  router: React.PropTypes.object
 };
 
 export default GoogleApiWrapper({
