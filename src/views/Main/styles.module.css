@@ -14,5 +14,5 @@
 .content {
   position: relative;
   flex: 2;
-  top: var(--height);
+  top: var(--topbar-height);
 }

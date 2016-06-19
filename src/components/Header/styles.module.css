@@ -8,8 +8,8 @@
   background: #48b5e9;
   width: 100%;
   padding: 0 25px;
-  height: var(--height);
-  line-height: var(--height);
+  height: var(--topbar-height);
+  line-height: var(--topbar-height);
   color: #fff;
 
   a {
